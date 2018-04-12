@@ -616,3 +616,25 @@ html, body {
 .highlight, .highlight .w {
   background-color: $code-bg;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Extras...
+////////////////////////////////////////////////////////////////////////////////
+
+url {
+    border-radius: 4px;
+    font-size: 90%;
+    padding: 3px 8px;
+    color: #5c666f;
+    background: #eef0f1;
+    font-family: proxima-nova, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+}

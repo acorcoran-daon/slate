@@ -2,7 +2,10 @@
 title: Digital OnBoarding Server reference documentation
 
 language_tabs:
-  - JSON
+  - shell: Examples
+
+includes:
+  - errors
 
 search: true
 ---
@@ -98,7 +101,7 @@ items | An array containing the current page of resources. | Array
 
 The metadata section shows this is the first page of twenty, with 485 users in total. This is the first page in the collection so the first and previous links are null; the next and last links show URIs for the respective next and last pages.
 
-```JSON
+```json
 {
 }
 ```
@@ -120,7 +123,7 @@ Every request returning a collection has a default sort field and direction. The
 
 Many IdentityX resources are related to other resources and contain links to them in their response properties. A link property is a nested object that contains an href attribute which is the fully qualified location URI of the linked resource. For example, a <code>IDCheck</code> has an associated <code>User</code>, <code>Documents</code>, <code>Faces</code> etc., and the JSON representation of a registration would contain two link properties such as in the example below:
 
-```JSON
+```json
 {
 
 }
@@ -128,7 +131,7 @@ Many IdentityX resources are related to other resources and contain links to the
                         
 The user link above is referred to as Instance links, as they refer to a specific instance of another resource. The other type of link is a Collection link which is the location of a related collection of resources, for example, the IDCheck request related to a specific user. In this scenario, the user representation below would have an authenticationRequests link attribute:
 
-```JSON
+```json
 {
   
 }
@@ -147,7 +150,7 @@ Biometric data and PII data is regarded as sensitive data and a special permissi
 
 Retrieving a IDCheck's face data without requesting the sensitive data would return JSON such as the segment below. The metadata is returned and an href attribute linking to the location of the raw data is included. If the sensitiveData query parameter is set to true, then a value attribute would also be returned containing the base64-encoded face.
 
-```JSON
+```json
 {
   
 }
@@ -157,10 +160,6 @@ Retrieving a IDCheck's face data without requesting the sensitive data would ret
 When getting a resource via the API, it is possible to return the other allowed permissions for the calling user on that resource. This is primarily to be used as an aid to application developers in determining whether certain buttons on a user interface should be enabled. For example, if the user has permission to list <code>Policies</code> but is not allowed to add a new <code>Policy</code> then the create <code>Policy</code> button could be disabled, rather than allowing a user to create it and then get a permissions error on submission. To include this information in any GET request, a query parameter called includeAuthorizationInfo should be set to true in the request. This will result in an attribute called allowedPermissions being returned which is a comma delimited list of permissions the user has on that specific resource.
 
 ## Errors
-
-<aside class="notice">
-This Error Code documentation is currently work in progress. There will be updates and possible changes.
-</aside>
 
 Responses from the REST API use conventional HTTP response status codes to indicate success or failure of an API request. A 200 (or 201 in the case of a new resource being created) is returned on success. Codes in the 4xx range indicate an error with authorization or the information supplied with the request. A 500 code indicates an error with IdentityX’s servers.
 
@@ -183,81 +182,19 @@ message | A simple user-friendly message that could optionally be displayed dire
 developerMessage | A verbose, plain language description of the problem for the app developer with hints about how to fix it | String
 code | An IdentityX-specific error code | Integer
 
-### Error Code Format
+# Digital OnBoarding Server API
 
-The Error Code which is included in the body of the response message follows a four digit format XXYY:
-<ul>
-<li>The prefix XX defines the resource for which the error was generated
-<li>The suffix YY defines the type of error.
-</ul>
-
-##### Resources
-Resource | Code
---------- | ----------- 
-General |50
-User | 51
-Tenant | 52
-Image | 53
-Encounter | 55
-Document | 56
-Face | 58
-
-##### Specific Errors
-Code | Code# | Meaning
---------- | ----------- |--------
-NOT_FOUND|00||
-IDS_MUST_MATCH|01||
-REQUIRED_VIOLATION|02|
-MIN_VIOLATION|03||
-MAX_VIOLATION|04|numeric field has associated max value
-LENGTH_VIOLATION|05|string length or array length restrictions exist
-FORMAT_VIOLATION|06|field must follow format, e.g. ISO dates, numeric fields
-PARSE_VIOLATION|07|
-NOT_IN_LIST_VIOLATION|08|field must validate against a server side list
-INVALID_TYPE|09|invalid voice smaple type etc
-PAGE_NUMBER_MAX_VIOLATION|10|page number query param exceed max available
-PAGE_INVALID_SORT_FIELD|11||invalid sort field|
-UNKNOWN_PROPERTY_VIOLATION|12|json field is not valid model property|
-NOT_CREATED|50||
-UNIQUE_VIOLATION|20||
-DEFAULT|21|unspecified error, need to check logs!
-NOT_AUTHENTICATED|80|
-NOT_AUTHORIZED|81|
-
-# Getting Started
-
-## Server Integration
-
-To start development integration the following <a href="https://www.getpostman.com/">Postman</a> sample project can be used to test API calls against the Digital OnBoarding Server. The sample project and environment configuration are available to download: <a href="samples/postman_samples.zip">postman_samples.zip</a>
-
-The sample assumes that a IdendityX user has already been created with a 'Face Selfie'.
-
-A typical interact with the server may follow the following pattern as shown below:
-<ol>
-<li> Create User using a FIDO registration process
-<li> Capture all relevant information for the OnBoarding Process i.e. ID Documents, pull information from a trusted source 
-<li> Issue liveness challenges for the user to complete 
-<li> Evaluate the data collected in the ID Check - perform biometric matching and if appropriate server side liveness.
-</ol>
-
-This would typically look like this:
-<img src="images/Generic_FIDO_Flow.png">
-
-# Digital OnBoarding Server
-
-Defines the REST interface for the Digital OnBoarding Server. At the moment this is a a first draft. <ul><li> TODO define the basic functionality of the service</li> <li> TODO describe security</li></ul>
+Defines the REST interface for the Digital OnBoarding Server. At the moment this is a a first draft. <ul><li> TODO define the basic functionality of the service</li> <li> TODO describe security<li></ul>
 
 <aside class="notice">
 Version covered here is <code>version 0.0.28</code>.
 </aside>
 
-You can also download the original <a href="src/resources/swagger.json">Swagger contract</a> in order to generate your client SDK and quickly get started. See <a href="https://github.com/swagger-api/swagger-codegen">https://github.com/swagger-api/swagger-codegen</a> for information on generating a swagger client APIs.
-
+You can also download the original <a href="src/resources/swagger.json">Swagger contract</a> in order to generate your client SDK and quickly get started.
 
 # IDCheck operations
 
 An IDCheck is created in order to establish Identity (ID). The IDCheck resouce represents all of the all of the data collected as part of the process of establishing Identity. It also contains all data generated when performing an evaluation of an the Identity (ID). <br><br> There is a one to many relationship between user and IDCheck. Multiple IDChecks may be created for various reason e.g. application for multiple financial products such as a bank account and in the future application for credit. <br><br> Multiple operations can be performed on an IDCheck - create, list, get, archive.
-
 
 ## List ID Checks
 
@@ -336,13 +273,7 @@ Code | Type | Description
 
 
 ## Creates an ID Check
-> Creates an ID Check without any data such as ID Documents or trusted source faces. Further data to be added to the ID Check as it is gathered.
 
-```JSON
-{
-  "referenceId": "a_unique_reference_id"
-}
-```
 
 
 Creates a new `ID Check` for a user. The ID Check Id (idCheckId) will be automatically assigned to the `ID Check`. 
@@ -354,6 +285,7 @@ The location of the newly created resource will be returned the in the HTTP Loca
 
 `POST /users/{id}/idchecks`
 
+
 ### Parameters
 
 Parameter | In | Type | Required | Description
@@ -363,33 +295,6 @@ livenessPolicyName | query | string | false | The name of the liveness policy
 idcheck | body | <a href="#idcheck">IDCheck</a> | true | An `ID Check` belonging to a user
 
 ### Responses
-
-> Returns the newly created ID Check with references to collected / generated data.
-
-```JSON
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA",
-    "id": "Ua4T5_SOa36jGuCjAhiZmA",
-    "created": "2018-04-11T16:05:11.737+0000",
-    "referenceId": "a_unique_reference_id",
-    "status": "ACTIVE",
-    "documents": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents"
-    },
-    "faces": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/faces"
-    },
-    "evaluation": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/evaluation"
-    },
-    "challenges": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/challenges"
-    },
-    "videos": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/videos"
-    }
-}
-```
 
 Code | Type | Description
 --- | --- | ---
@@ -407,32 +312,6 @@ Code | Type | Description
 
 
 Gets `ID Check` belonging to a user.
-> Returns the ID Check with references to collected / generated data.
-
-```JSON
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA",
-    "id": "Ua4T5_SOa36jGuCjAhiZmA",
-    "created": "2018-04-11T16:05:11.737+0000",
-    "referenceId": "a_unique_reference_id",
-    "status": "ACTIVE",
-    "documents": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents"
-    },
-    "faces": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/faces"
-    },
-    "evaluation": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/evaluation"
-    },
-    "challenges": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/challenges"
-    },
-    "videos": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/videos"
-    }
-}
-```
 
 
 ### HTTP Request
@@ -460,6 +339,8 @@ Code | Type | Description
 
 
 ## Archive an ID Check
+
+
 
 Sets an `ID Check` status to archived. Once set the ID Check cannot be updated.
 
@@ -491,7 +372,7 @@ Code | Type | Description
 
 # LivenessChallenge operations
 
-A LivenessChallenge encapsulates an action which must be performed as part of Identity Establishment to ensure that a person is present. Liveness challanges are configured on the server and the action along with configuration is retrieved by the client for an end user to perform. <br><br>There is a zero to many relationship between IDChecks and LivenessChallenges i.e. zero or more LivevnessChallenges can be created for each IDCheck. <br><br> Multiple operations can be performed on an LivenessChallenge - create (based on a policy), list, get.
+A liveness challenge encapsulates an action which must be performed as part of Identity Establishment to ensure that a person is present. Liveness challanges are configured on the server and the action along with configuration is retrieved by the client for an end user to perform. <br><br>There is a zero to many relationship between IDChecks and LivenessChallenges i.e. zero or more LivevnessChallenges can be created for each IDCheck.
 
 
 ## Create liveness challenges
@@ -501,8 +382,6 @@ A LivenessChallenge encapsulates an action which must be performed as part of Id
 Create a new set of liveness challenged based on the supplied liveness policy id. 
 
 The location of the newly created resource will be returned the in the HTTP Location Header.
-
-> Adds a document to the ID Check.
 
 
 ### HTTP Request
@@ -663,7 +542,7 @@ Code | Type | Description
 
 # LivenessVideo operations
 
-LivenessVideo respresents an end user's attempt to satisfy a LivenessChallenge. <br><br> There is a one to one or a many to one relationship between a LivenessVideo and a LivenessChallenge i.e. there can be LivenessVideo per video or a LivenessVideo can be used to record all the LivenessChallenges for an IDCheck <br><br> Multiple operations can be performed on an LivenessVideo - create, list, get.
+TODO .... liveness video description
 
 
 ## Creates a Liveness Video
@@ -996,7 +875,7 @@ Code | Type | Description
 
 # Evaluation operations
 
-An evaluation is created to determine confidence in the establishment of the Identity. Currently confidence is formed based on 1:1 Face matching and determining if LivenessChallenges were completed successfully. If a document or documents have been submitted the data extracted from these document can be used to gain futher confidence in the establishment of the Identity and combined with the evaluation data. <br><br> There is a one to one relationship between the IDCheck and Evaluation. An Evaluation can be performed (updated) multiple times if required. This may be useful in the case where confidence in the Established Idenitty cannot be reached and extra data must be requested i.e. preform a 'step-up' in the Establishment process. 
+TODO .... evaluation description
 
 
 ## Create an Evaluation
@@ -1006,7 +885,6 @@ An evaluation is created to determine confidence in the establishment of the Ide
 Creates (performs) an evaluation the information gathered for the `ID Check`. 
 
 The location of the newly created resource will be returned the in the HTTP Location Header.
-
 
 
 ### HTTP Request
@@ -1023,60 +901,6 @@ idCheckId | path | string | true | The identifier of the `ID Check`
 evaluationPolicyName | query | string | true | The name of the evaluation policy to use when performing the evaluation
 
 ### Responses
-
-> 
-
-```JSON
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/evaluation",
-    "id": "rKdIsImp1YSXYpZ0fK7r-w",
-    "created": "2018-04-12T14:00:34.136+0000",
-    "evaluationPolicy": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/admin/policies/JfJHCj38guRuFQHhyVMQPQ",
-        "id": "JfJHCj38guRuFQHhyVMQPQ",
-        "created": "2018-04-12T10:53:30.008+0000",
-        "type": "EVALUATION",
-        "status": "ACTIVE",
-        "name": "SampleEvalPolicy",
-        "description": "A Sample Policy",
-        "policy": {
-            "faceEvaluation": {
-                "selection": {
-                    "matchAll": true
-                }
-            }
-        }
-    },
-    "results": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/evaluation/results",
-        "items": [
-            {
-                "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/evaluation/results/8XFLb2wyYGGQYN-UeM-cuw?type=FA",
-                "id": "8XFLb2wyYGGQYN-UeM-cuw",
-                "created": "2018-04-12T14:00:34.141+0000",
-                "type": "FA",
-                "result": "NO_MATCH",
-                "score": 0.6972365379333496,
-                "threshold": 0.010007263,
-                "fmr": 0.4327713944763422,
-                "evaluationPolicy": {
-                    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/admin/policies/JfJHCj38guRuFQHhyVMQPQ"
-                },
-                "claimFace": {
-                    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/faces/4ELebNfr10ILLRxkG60bsw",
-                    "subtype": "DOC_SERVER_EXTRACT",
-                    "sensitiveData": {
-                        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/faces/4ELebNfr10ILLRxkG60bsw/sensitiveData"
-                    },
-                    "document": {
-                        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/documents/2w73XvSJWKOABUvsaZVx_Q"
-                    }
-                }
-            }
-        ]
-    }
-}
-```
 
 Code | Type | Description
 --- | --- | ---
@@ -1158,6 +982,7 @@ Code | Type | Description
 ## Get an Evaulation result
 
 
+
 Get an Evaulation result.
 
 
@@ -1190,9 +1015,15 @@ Code | Type | Description
 
 # Face operations
 
-A Face resouce can come from multiple sources: <ul><li>Extracted from a Document <li>provided from a trusted source <li>extracted from key frames in a LivenessVideo. </ul><br><br> The Faces in the system are used to match against the enrolemnt 'selfie' image as part of an Evaluation when attempting to establish </br></br> proof of Identity. <br><br> Multiple operations can be performed on an Face - create, list, get. </br></br>
+TODO .... face description
+
 
 ## Create a Face
+
+
+
+Create a face image to be added to an `ID Check`.
+
 
 ### HTTP Request
 
@@ -1220,7 +1051,7 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Faces
+## Gets Faces
 
 
 
@@ -1316,6 +1147,38 @@ sensitiveData | query | boolean | false | This field controls whether sensitive 
 Code | Type | Description
 --- | --- | ---
 200 | <a href="#face">Face</a> | Successful response
+401 | <a href="#error">Error</a> | Authentication credentials were missing or incorrect
+403 | <a href="#error">Error</a> | The caller doesn't have sufficient permission
+404 | <a href="#error">Error</a> | Resource not found at this location.
+500 | <a href="#error">Error</a> | There was an error within the Digital OnBoarding Server
+0 | <a href="#error">Error</a> | Unexpected error
+
+
+## Delete a Face
+
+
+
+Deletes the face images captured during an `ID Check`.
+
+
+### HTTP Request
+
+`DELETE /users/{id}/idchecks/{idCheckId}/faces/{faceId}`
+
+
+### Parameters
+
+Parameter | In | Type | Required | Description
+--- | --- | --- | --- |---
+id | path | string | true | The identifier of the user to which the `ID Check(s)` are associated
+idCheckId | path | string | true | The identifier of the `ID Checks`
+faceId | path | string | true | The identifier of Face image
+
+### Responses
+
+Code | Type | Description
+--- | --- | ---
+204 |  | Resource deleted successfully.
 401 | <a href="#error">Error</a> | Authentication credentials were missing or incorrect
 403 | <a href="#error">Error</a> | The caller doesn't have sufficient permission
 404 | <a href="#error">Error</a> | Resource not found at this location.
@@ -1421,34 +1284,19 @@ Code | Type | Description
 
 # Document operations
 
-A Document represents the capture of a single side of a document. Documents are uploaded to the server and are processed on the server where the document is recognized & classified, text is extracted via OCR and relevant images are extracted. <br><br> Documents are processed asynchronously on the server to ensure that clients are not blocked while the document is being processed. <br><br> There is a one to many relationship between IDChecks and Documents. A Document can have also have relationsips to other rescoures, for example a Face is a Face image has been extracted from the document. <br><br> Multiple operations can be performed on an Document - create, list, get.
+TODO .... document description
 
 
 ## Create a Document
 
+
+
 Create a document to be added to an `ID Check`.
 
-> Adds a document to the ID Check for processing.
-
-```JSON
-{  
-   "captured":"2018-01-22T14:10:36Z",
-   "clientCapture":{  
-      "qualityScore":0,
-      "processedImage":{  
-         "sensitiveData":{  
-            "imageFormat":"JPG",
-            "value":""
-         }
-      }
-   }
-}
-```
 
 ### HTTP Request
 
 `POST /users/{id}/idchecks/{idCheckId}/documents`
-
 
 
 ### Parameters
@@ -1460,23 +1308,6 @@ idCheckId | path | string | true | The identifier of the `ID Checks`
 document | body | <a href="#document">Document</a> | true | The documents captured
 
 ### Responses
-
-> Returns the Document which has been created and added to the ID Check.
-
-```JSON 
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents/Ul7yzSkXoUquQKRzNNgsWQ",
-    "id": "Ul7yzSkXoUquQKRzNNgsWQ",
-    "created": "2018-04-12T09:54:12.399+0000",
-    "captured": "2018-01-22T14:10:36.000+0000",
-    "clientCapture": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents/Ul7yzSkXoUquQKRzNNgsWQ/clientCapture"
-    },
-    "serverProcessed": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents/Ul7yzSkXoUquQKRzNNgsWQ/serverProcessed"
-    }
-}
-```
 
 Code | Type | Description
 --- | --- | ---
@@ -1491,7 +1322,10 @@ Code | Type | Description
 
 ## Get Documents
 
+
+
 Gets the documents captured during an `ID Check`.
+
 
 ### HTTP Request
 
@@ -1512,39 +1346,6 @@ sortAscending | query | boolean | false | Sort order of the items to be returned
 
 ### Responses
 
-> Gets the documents which have been added to the ID Check
-
-```JSON
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments",
-    "metadata": {
-        "page": 1,
-        "limit": 20,
-        "pageCount": 1,
-        "totalCount": 1
-    },
-    "paging": {},
-    "items": [
-        {
-            "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/zOSr0A6U8MW45LwN4CHNog",
-            "id": "zOSr0A6U8MW45LwN4CHNog",
-            "created": "2018-04-11T16:37:15.801+0000",
-            "captured": "2018-01-22T14:10:36.000+0000",
-            "clientCapture": {
-                "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/zOSr0A6U8MW45LwN4CHNog/clientCapture"
-            },
-            "serverProcessed": {
-                "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/zOSr0A6U8MW45LwN4CHNog/serverProcessed"
-            },
-            "processingStatus": "QUEUED",
-            "submitted": "2018-04-11T16:37:16.000+0000",
-            "retryCount": 0,
-            "allowedSensitiveDataPermissions": ""
-        }
-    ]
-}
-```
-
 Code | Type | Description
 --- | --- | ---
 200 | <a href="#pageofdocuments">PageOfDocuments</a> | Successful response
@@ -1554,6 +1355,36 @@ Code | Type | Description
 500 | <a href="#error">Error</a> | There was an error within the Digital OnBoarding Server
 0 | <a href="#error">Error</a> | Unexpected error
 
+
+## Get Documents
+
+
+
+Deletes the documents captured during an `ID Check`.
+
+
+### HTTP Request
+
+`DELETE /users/{id}/idchecks/{idCheckId}/documents`
+
+
+### Parameters
+
+Parameter | In | Type | Required | Description
+--- | --- | --- | --- |---
+id | path | string | true | The identifier of the user to which the `ID Check(s)` are associated
+idCheckId | path | string | true | The identifier of the `ID Checks`
+
+### Responses
+
+Code | Type | Description
+--- | --- | ---
+204 |  | Resource deleted successfully.
+401 | <a href="#error">Error</a> | Authentication credentials were missing or incorrect
+403 | <a href="#error">Error</a> | The caller doesn't have sufficient permission
+404 | <a href="#error">Error</a> | Resource not found at this location.
+500 | <a href="#error">Error</a> | There was an error within the Digital OnBoarding Server
+0 | <a href="#error">Error</a> | Unexpected error
 
 
 ## Replace Document
@@ -1596,6 +1427,7 @@ Code | Type | Description
 
 Gets the documents captured during an `ID Check`.
 
+
 ### HTTP Request
 
 `GET /users/{id}/idchecks/{idCheckId}/documents/{documentId}`
@@ -1611,38 +1443,41 @@ documentId | path | string | true | The identifier of the document
 
 ### Responses
 
-> Response for a document which was successfully processed.
-
-```JSON
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents/Ul7yzSkXoUquQKRzNNgsWQ",
-    "id": "Ul7yzSkXoUquQKRzNNgsWQ",
-    "created": "2018-04-12T09:54:12.399+0000",
-    "captured": "2018-01-22T14:10:36.000+0000",
-    "type": "Australia - ePassport (2009) Travel Document",
-    "classification": "Travel document",
-    "issuer": "Australia",
-    "issued": "2008-12-25T00:00:00.000+0000",
-    "expiry": "2011-12-25T00:00:00.000+0000",
-    "clientCapture": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents/Ul7yzSkXoUquQKRzNNgsWQ/clientCapture"
-    },
-    "serverProcessed": {
-        "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmA/documents/Ul7yzSkXoUquQKRzNNgsWQ/serverProcessed"
-    },
-    "processingStatus": "PROCESSED",
-    "submitted": "2018-04-12T09:54:12.488+0000",
-    "completed": "2018-04-12T09:54:15.043+0000",
-    "timeToProcess": 1085,
-    "elapsedTime": 2555,
-    "retryCount": 0,
-    "allowedSensitiveDataPermissions": ""
-}
-```
-
 Code | Type | Description
 --- | --- | ---
 200 | <a href="#document">Document</a> | Successful response
+401 | <a href="#error">Error</a> | Authentication credentials were missing or incorrect
+403 | <a href="#error">Error</a> | The caller doesn't have sufficient permission
+404 | <a href="#error">Error</a> | Resource not found at this location.
+500 | <a href="#error">Error</a> | There was an error within the Digital OnBoarding Server
+0 | <a href="#error">Error</a> | Unexpected error
+
+
+## Delete a Document
+
+
+
+Deletes the documents captured during an `ID Check`.
+
+
+### HTTP Request
+
+`DELETE /users/{id}/idchecks/{idCheckId}/documents/{documentId}`
+
+
+### Parameters
+
+Parameter | In | Type | Required | Description
+--- | --- | --- | --- |---
+id | path | string | true | The identifier of the user to which the `ID Check(s)` are associated
+idCheckId | path | string | true | The identifier of the `ID Checks`
+documentId | path | string | true | The identifier of the document
+
+### Responses
+
+Code | Type | Description
+--- | --- | ---
+204 |  | Resource deleted successfully.
 401 | <a href="#error">Error</a> | Authentication credentials were missing or incorrect
 403 | <a href="#error">Error</a> | The caller doesn't have sufficient permission
 404 | <a href="#error">Error</a> | Resource not found at this location.
@@ -1876,7 +1711,7 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Server Processed Document
+## Get Server Processeded Document
 
 
 
@@ -1908,7 +1743,7 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Server Processed Document OCR Data
+## Get Server Processeded Document OCR Data
 
 
 
@@ -1940,10 +1775,11 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Server Processed OCR Sensitive Data
+## Get Server Processeded OCR Sensitive Data
+
+
 
 Gets the server side OCR data extracted by the document processor.
-
 
 
 ### HTTP Request
@@ -1961,235 +1797,6 @@ documentId | path | string | true | The identifier of the document
 
 ### Responses
 
-
-> Gets the OCR data extracted from the ID Document.
-
-```JSON
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAz2UQXl6gzhaOyKeC-TCrb1Q/idchecks/Ua4T5_SOa36jGuCjAhiZmAdocuments/documents/Ul7yzSkXoUquQKRzNNgsWQ/serverProcessed/ocrData/sensitiveData",
-    "mrz": {
-        "0": {
-            "fieldId": "0",
-            "name": "Document Class Code",
-            "value": "P",
-            "source": "WHITE_LIGHT"
-        },
-        "1": {
-            "fieldId": "1",
-            "name": "Issuing State Code",
-            "value": "AUS",
-            "source": "WHITE_LIGHT"
-        },
-        "2": {
-            "fieldId": "2",
-            "name": "Document Number",
-            "value": "U0996738",
-            "source": "WHITE_LIGHT"
-        },
-        "3": {
-            "fieldId": "3",
-            "name": "Date Of Expiry",
-            "value": "2011-12-25",
-            "source": "WHITE_LIGHT"
-        },
-        "5": {
-            "fieldId": "5",
-            "name": "Date Of Birth",
-            "value": "1979-06-07",
-            "source": "WHITE_LIGHT"
-        },
-        "8": {
-            "fieldId": "8",
-            "name": "Surname",
-            "value": "CITIZEN",
-            "source": "WHITE_LIGHT"
-        },
-        "9": {
-            "fieldId": "9",
-            "name": "Given Names",
-            "value": "JANE",
-            "source": "WHITE_LIGHT"
-        },
-        "12": {
-            "fieldId": "12",
-            "name": "Sex",
-            "value": "F",
-            "source": "WHITE_LIGHT"
-        },
-        "25": {
-            "fieldId": "25",
-            "name": "Surname And Given Names",
-            "value": "CITIZEN JANE",
-            "source": "WHITE_LIGHT"
-        },
-        "26": {
-            "fieldId": "26",
-            "name": "Nationality Code",
-            "value": "UTO",
-            "source": "WHITE_LIGHT"
-        },
-        "36": {
-            "fieldId": "36",
-            "name": "Optional Data",
-            "value": "50013871L",
-            "source": "WHITE_LIGHT"
-        },
-        "38": {
-            "fieldId": "38",
-            "name": "Issuing State Name",
-            "value": "Australia",
-            "source": "WHITE_LIGHT"
-        },
-        "51": {
-            "fieldId": "51",
-            "name": "MRZ Strings",
-            "value": "P<AUSCITIZEN<<JANE<<<<<<<<<<<<<<<<<<<<<<<<<< U0996738<2UTO7906075F1112256<50013871L<<<<68",
-            "source": "WHITE_LIGHT"
-        },
-        "80": {
-            "fieldId": "80",
-            "name": "Document Number Check Digit",
-            "value": "2",
-            "source": "WHITE_LIGHT"
-        },
-        "81": {
-            "fieldId": "81",
-            "name": "Date Of Birth Check Digit",
-            "value": "5",
-            "source": "WHITE_LIGHT"
-        },
-        "82": {
-            "fieldId": "82",
-            "name": "Date Of Expiry Check Digit",
-            "value": "6",
-            "source": "WHITE_LIGHT"
-        },
-        "84": {
-            "fieldId": "84",
-            "name": "Final Check Digit",
-            "value": "8",
-            "source": "WHITE_LIGHT"
-        },
-        "172": {
-            "fieldId": "172",
-            "name": "MRZ Strings With Correct Check Sums",
-            "value": "P<AUSCITIZEN<<JANE<<<<<<<<<<<<<<<<<<<<<<<<<< U0996738<2UTO7906075F1112256<50013871L<<<<68",
-            "source": "WHITE_LIGHT"
-        },
-        "185": {
-            "fieldId": "185",
-            "name": "Age",
-            "value": "38",
-            "source": "WHITE_LIGHT"
-        },
-        "195": {
-            "fieldId": "195",
-            "name": "Optional Data Check Digit",
-            "value": "6",
-            "source": "WHITE_LIGHT"
-        },
-        "364": {
-            "fieldId": "364",
-            "name": "Remainder Term",
-            "value": "0",
-            "source": "WHITE_LIGHT"
-        }
-    },
-    "visualZone": {
-        "0": {
-            "fieldId": "0",
-            "name": "Document Class Code",
-            "value": "P",
-            "source": "WHITE_LIGHT"
-        },
-        "1": {
-            "fieldId": "1",
-            "name": "Issuing State Code",
-            "value": "AUS",
-            "source": "WHITE_LIGHT"
-        },
-        "2": {
-            "fieldId": "2",
-            "name": "Document Number",
-            "value": "U0996738",
-            "source": "WHITE_LIGHT"
-        },
-        "3": {
-            "fieldId": "3",
-            "name": "Date Of Expiry",
-            "value": "2011-12-25",
-            "source": "WHITE_LIGHT"
-        },
-        "4": {
-            "fieldId": "4",
-            "name": "Date Of Issue",
-            "value": "2008-12-25",
-            "source": "WHITE_LIGHT"
-        },
-        "5": {
-            "fieldId": "5",
-            "name": "Date Of Birth",
-            "value": "1979-06-07",
-            "source": "WHITE_LIGHT"
-        },
-        "6": {
-            "fieldId": "6",
-            "name": "Place Of Birth",
-            "value": "MELBOURNE",
-            "source": "WHITE_LIGHT"
-        },
-        "8": {
-            "fieldId": "8",
-            "name": "Surname",
-            "value": "CITIZEN",
-            "source": "WHITE_LIGHT"
-        },
-        "9": {
-            "fieldId": "9",
-            "name": "Given Names",
-            "value": "JANE",
-            "source": "WHITE_LIGHT"
-        },
-        "12": {
-            "fieldId": "12",
-            "name": "Sex",
-            "value": "F",
-            "source": "WHITE_LIGHT"
-        },
-        "24": {
-            "fieldId": "24",
-            "name": "Authority",
-            "value": "AUSTRALIA",
-            "source": "WHITE_LIGHT"
-        },
-        "25": {
-            "fieldId": "25",
-            "name": "Surname And Given Names",
-            "value": "CITIZEN JANE",
-            "source": "WHITE_LIGHT"
-        },
-        "38": {
-            "fieldId": "38",
-            "name": "Issuing State Name",
-            "value": "Australia",
-            "source": "WHITE_LIGHT"
-        },
-        "185": {
-            "fieldId": "185",
-            "name": "Age",
-            "value": "38",
-            "source": "WHITE_LIGHT"
-        },
-        "364": {
-            "fieldId": "364",
-            "name": "Remainder Term",
-            "value": "0",
-            "source": "WHITE_LIGHT"
-        }
-    }
-}
-```
-
 Code | Type | Description
 --- | --- | ---
 200 | <a href="#docprocessorsensitiveocrdata">DocProcessorSensitiveOcrData</a> | Successful response
@@ -2200,7 +1807,7 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Server Processed Image Data
+## Get Server Processeded Image Data
 
 
 
@@ -2233,7 +1840,7 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Server Processed Image Data
+## Get Server Processeded Image Data
 
 
 
@@ -2266,7 +1873,7 @@ Code | Type | Description
 0 | <a href="#error">Error</a> | Unexpected error
 
 
-## Get Server Processed Image Data
+## Get Server Processeded Image Data
 
 
 
@@ -2301,7 +1908,7 @@ Code | Type | Description
 
 # OnBoardingPolicy operations
 
-Policies are used to configure the On-boarding process. The types of Policies which can be user are: <ul><li> Evaluation - configures how the evaulation of an IDCheck is performed.<li> Liveness - configures the set of LivenessChallanges which are to be generated for IDChecks</ul>. <br><br> Multiple operations can be performed on an Policy - create, list, get, archive
+
 
 
 ## List Policies
@@ -2342,23 +1949,6 @@ Code | Type | Description
 
 ## Creates a Policy
 
-> Create a simple evaluation policy which matches all faces in the ID Check as part of the evaluation.
-
-```JSON
-{
-  "type" : "EVALUATION",
-  "status" : "ACTIVE",
-  "name" : "{{samplePolicy}}",
-  "description" : "A Sample Policy",
-  "policy" : {
-    "faceEvaluation" : {
-      "selection" : {
-        "matchAll" : true
-      }
-    }
-  }
-}
-```
 
 
 Creates a new Policy. The `policyId` will be automatically assigned to the liveness policy. 
@@ -2378,27 +1968,6 @@ Parameter | In | Type | Required | Description
 policy | body | <a href="#policy">Policy</a> | true | A Liveness Policy
 
 ### Responses
-
-> Reponse for a successfully created Policy
-
-```
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/admin/policies/JfJHCj38guRuFQHhyVMQPQ",
-    "id": "JfJHCj38guRuFQHhyVMQPQ",
-    "created": "2018-04-12T10:53:30.008+0000",
-    "type": "EVALUATION",
-    "status": "ACTIVE",
-    "name": "SampleEvalPolicy",
-    "description": "A Sample Policy",
-    "policy": {
-        "faceEvaluation": {
-            "selection": {
-                "matchAll": true
-            }
-        }
-    }
-}
-```
 
 Code | Type | Description
 --- | --- | ---
@@ -2430,27 +1999,6 @@ Parameter | In | Type | Required | Description
 policyId | path | string | true | The identifier of the Policy
 
 ### Responses
-
-> Return the specified Policy
-
-```
-{
-    "href": "https://tenant1.domain.com/DigitalOnBoardingServices/rest/v1/admin/policies/JfJHCj38guRuFQHhyVMQPQ",
-    "id": "JfJHCj38guRuFQHhyVMQPQ",
-    "created": "2018-04-12T10:53:30.008+0000",
-    "type": "EVALUATION",
-    "status": "ACTIVE",
-    "name": "SampleEvalPolicy",
-    "description": "A Sample Policy",
-    "policy": {
-        "faceEvaluation": {
-            "selection": {
-                "matchAll": true
-            }
-        }
-    }
-}
-```
 
 Code | Type | Description
 --- | --- | ---
@@ -2508,7 +2056,7 @@ Attribute | Type | Required | Description
 
 Attribute | Type | Required | Description
 --- | --- | --- | ---
-qualityScore | number (double) | false | Reserved for future use. Overall client assessment of document capture.
+qualityScore | number (double) | false | Reserved for future use. Overall client assessment of docuemnt capture.
 unprocessedImage | <a href="#documentimagedata">DocumentImageData</a> | false | This is the raw image as captured by the Document Scanning SDK before the image has been cropped or de-skewed.
 processedImage | <a href="#documentimagedata">DocumentImageData</a> | false | This is the cropped and de-skewed image as captured by the Document Scanning SDK.
 ocrData | <a href="#documentocrdata">DocumentOcrData</a> | false | This is the client extracted OCR data if available.
@@ -2545,7 +2093,7 @@ Attribute | Type | Required | Description
 --- | --- | --- | ---
 sensitiveData | <a href="#docprocessorsensitiveocrdata">DocProcessorSensitiveOcrData</a> | false | 
 allowedPermissions | string | false | The permissions permitted for the requester on this object. This attribute is readonly
-href | string | false | The location of the Server Processed OCR data. This attribute is readonly.
+href | string | false | The location of the Server Processed ORC data. This attribute is readonly.
       
 ## DocProcessorSensitiveOcrData
 
