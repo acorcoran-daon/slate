@@ -1,0 +1,12 @@
+## Sorting
+
+A request for a collection resource can contain optional sortField and sortAscending parameters:
+
+* sortField � the name of the property the returned resources should be sorted by. Allowable values are specified on a per operation basis in the documentation.
+* sortAscending � true or false
+
+Every request returning a collection has a default sort field and direction. The default direction depends on the default sort field. Generally sortAscending defaults to true when the default sortField is a text property, but if the default sortField is a date then sortAscending is defaulted to false to show the most recent entries at the top.
+
+**Example Request:** Returning users sorted by most recent creation date:
+
+<url><code>GET</code> https://tenant.domain.com/IdentityXServices/rest/v1/users?sortField=created&sortAscending=false</url>

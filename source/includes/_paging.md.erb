@@ -1,0 +1,33 @@
+
+## Resources and Pagination
+
+All top-level IdentityX API resources have support for �list� API methods which return multiple resources in one call. For example, �all idChecks with a referenceId starting with thales�. These API methods return a Collection Resource, which is a resource containing an array of other resources such as IdChecks or Policies. A request may return a large number of resources, so pagination is used to break up the results into one or more pages.
+
+The metadata attribute of a Collection Resource contains information such as the total count of resources in the collection, the current page and limit per page. The paging attribute has links to the first, previous, next and last pages in the collection. These links will be null if they represent the current page, such that if the current page is the first page then the first and previous links will be null (much as the first and previous buttons on a UI would be disabled in this case). Likewise, the next and last links will point to the appropriate pages assuming there are multiple pages in the collection.
+
+
+### Collection Resource
+
+Attribute  |  Description  |  Type
+---------  |  -----------  |  ----
+href | The fully qualified location URI of the Collection Resource   |  String
+metadata  |  Collection metadata  |  Object
+page  |  The page number in the collection these resources represent. | Integer
+limit | The maximum number of resources to return in one request. | Integer
+totalCount | The total number of resources in the collection. | Integer
+paging | Links to first, previous, next and last pages in the collection. | Object
+first | The location of the first page in the collection. This will be null if there is only one page, or if the current page is also the first page. | String
+previous | The location of the previous page in the collection. This will be null if there is only one page, or if the current page is also the first page. | String
+next | The location of the next page in the collection. This will be null if there is only one page, or if the current page is also the last page. | String
+last | The location of the last page in the collection. This will be null if there is only one page, or if the current page is also the last page. | String
+items | An array containing the current page of resources. | Array
+
+
+**Example Response**: Listing all idchecks:
+
+The metadata section shows this is the first page of twenty, with 485 users in total. This is the first page in the collection so the first and previous links are null; the next and last links show URIs for the respective next and last pages.
+
+```JSON
+{
+}
+```

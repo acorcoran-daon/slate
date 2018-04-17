@@ -1,0 +1,17 @@
+## Server Integration
+
+To start development integration the following <a href="https://www.getpostman.com/">Postman</a> sample project can be used to test API calls against the Digital OnBoarding Server. The sample project and environment configuration are available to download: <a href="samples/postman_samples.zip">postman_samples.zip</a>
+
+The sample assumes that a IdentityX user has already been created with a 'Face Selfie'.
+
+A typical interact with the server may follow the following pattern as shown below:
+<ol>
+<li> Create User using a FIDO registration process
+<li> Capture all relevant information for the OnBoarding Process i.e. ID Documents, pull information from a trusted source 
+<li> Issue liveness challenges for the user to complete 
+<li> Evaluate the data collected in the ID Check - perform biometric matching and if appropriate server side liveness.
+</ol>
+
+This would typically look like this:
+<img src="images/Generic_FIDO_Flow.png">
+

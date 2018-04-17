@@ -1,0 +1,12 @@
+## Versioning
+
+The current version of the IdentityX REST API is v1. This version number will be changed for subsequent releases. But the previous versions will still be supported by the server until deprecated at a suitable time. The major version of the API is part of the href attribute used to access resources. The following two URLs refer to the same user, however the first will return the version 1 representation of the user and the second will return their version 2 representation of the user (which may have additional properties or other changes):
+
+<url>https://tenant.domain.com/DigitalOnBoardingServices/rest/v1/users/QTAzN9Yht3IL-Q714vX0tJyMgQ/idchecks<url>
+
+<url>https://tenant.domain.com/DigitalOnBoardingServices/rest/v2/users/QTAzN9Yht3IL-Q714vX0tJyMgQ/idchecks<url>
+
+<aside class="notice">
+<b>NOTE:</b> It is strongly recommended that if external systems are storing the identifiers of IdentityX entities, the id of the entity should be stored rather than the href attribute as this href attribute may change over time as the system location and version of IdentityX may change.
+</aside>
+

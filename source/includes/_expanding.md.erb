@@ -1,0 +1,16 @@
+
+## Expanding Resources
+When retrieving a resource with the IdentityX API, you can request that the server return not only that resource but also one or more of its related (linked) resources. 
+
+Expanded resources are not yet implemented by the OnBoarding REST API.
+
+## Sensitive Data
+Biometric data and PII data is regarded as sensitive data and a special permission is required to be able to view a face photo or request personally identifiable data such as the OCR'd data of an identity document. When requesting a resource which has sensitive data, this data will not be returned by default (although associated metadata will be). To retrieve the actual sensitive data itself, a query parameter called sensitiveData must be included and set to true and the caller must have the requisite permission.
+
+Retrieving a IDCheck's face data without requesting the sensitive data would return JSON such as the segment below. The metadata is returned and an href attribute linking to the location of the raw data is included. If the sensitiveData query parameter is set to true, then a value attribute would also be returned containing the base64-encoded face.
+
+```JSON
+{
+  
+}
+```
