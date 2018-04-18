@@ -1,11 +1,10 @@
-
 ## Errors
 
 <aside class="notice">
 This Error Code documentation is currently work in progress. There will be updates and possible changes.
 </aside>
 
-Responses from the REST API use conventional HTTP response status codes to indicate success or failure of an API request. A 200 (or 201 in the case of a new resource being created) is returned on success. Codes in the 4xx range indicate an error with authorization or the information supplied with the request. A 500 code indicates an error with IdentityX�s servers.
+Responses from the REST API use conventional HTTP response status codes to indicate success or failure of an API request. A 200 (or 201 in the case of a new resource being created) is returned on success. Codes in the 4xx range indicate an error with authorization or the information supplied with the request. A 500 code indicates an error with IdentityX’s servers.
 
 HTTP Status code | Description
 ---------------- | -----------
@@ -25,44 +24,3 @@ httpStatus | The HTTP response status code | Integer
 message | A simple user-friendly message that could optionally be displayed directly to application end user (but not language-aware) | String
 developerMessage | A verbose, plain language description of the problem for the app developer with hints about how to fix it | String
 code | An IdentityX-specific error code | Integer
-
-### Error Code Format
-
-The Error Code which is included in the body of the response message follows a four digit format XXYY:
-<ul>
-<li>The prefix XX defines the resource for which the error was generated
-<li>The suffix YY defines the type of error.
-</ul>
-
-##### Resources
-Resource | Code
---------- | ----------- 
-General |50
-User | 51
-Tenant | 52
-Image | 53
-Encounter | 55
-Document | 56
-Face | 58
-
-##### Specific Errors
-Code | Code# | Meaning
---------- | ----------- |--------
-NOT_FOUND|00||
-IDS_MUST_MATCH|01||
-REQUIRED_VIOLATION|02|
-MIN_VIOLATION|03||
-MAX_VIOLATION|04|numeric field has associated max value
-LENGTH_VIOLATION|05|string length or array length restrictions exist
-FORMAT_VIOLATION|06|field must follow format, e.g. ISO dates, numeric fields
-PARSE_VIOLATION|07|
-NOT_IN_LIST_VIOLATION|08|field must validate against a server side list
-INVALID_TYPE|09|invalid voice sample type etc
-PAGE_NUMBER_MAX_VIOLATION|10|page number query parameter exceed max available
-PAGE_INVALID_SORT_FIELD|11||invalid sort field|
-UNKNOWN_PROPERTY_VIOLATION|12|JSON field is not valid model property|
-NOT_CREATED|50||
-UNIQUE_VIOLATION|20||
-DEFAULT|21|unspecified error, need to check logs!
-NOT_AUTHENTICATED|80|
-NOT_AUTHORIZED|81|

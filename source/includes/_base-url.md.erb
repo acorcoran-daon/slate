@@ -1,17 +1,17 @@
 ## Base URL
 
-In IdentityX, the URL specifies the tenant that the request relates to, or the system if the request is at a system level. This tenant is indicated by a sub-domain on the URL of the system. Examples:
+In IdentityX, the URL specifies the tenant that the request relates to, or the system if the request is at a system level. This tenant is indicated either within the path of the URL or by a sub-domain on the URL of the system. Examples:
 
-* <url>https://tenant1.domain.com/IdentityXOnBoardingServices/rest/v1</url>
+* <url>https://**tenant1**.domain.com/DigitalOnBoardingServices/rest/v1</url>
 would be the base URL for a tenant with a domain identifier of tenant1.
 
-* <url>https://tenant2.domain.com/IdentityXOnBoardingServices/rest/v1</url>
+* <url>https://emea.identityx-cloud.com/**tenant2**/DigitalOnBoardingServices/rest/v1</url>
 would be the base URL for a tenant with a domain identifier of tenant2.
 
 The following sample base URL is used in the sections below:
 
-* <url>https://tenant.domain.com/IdentityXOnBoardingServices/rest/v1</url>
+* <url>https://emea.identityx-cloud.com/mytenant/DigitalOnBoardingServices/rest/v1</url>
 
-All entities in IdentityX have ID and href attributes. Generally the href attribute is used in IdentityX to identify the entities. This href attribute is the base URL plus the entity type, such as users, idchecks or documents, and the unique identifier of the entity (the ID). For example, an href attribute for an ID Check might be:
+All entities in IdentityX have ID and href attributes. Generally the href attribute is used in IdentityX to identify the entities. This href attribute is the base URL plus the entity type, such as `User`, `ID Check` or `Document`, and the unique identifier of the entity (the ID). For example, an href attribute for an ID Check might be:
 
-* <url>https://tenant.domain.com/IdentityXOnBoardingServices/rest/v1/users/QTAzN9Yht3IL-Q714vX0tJyMgQ/idchecks/</url>
+* <url>https://emea.identityx-cloud.com/mytenant/DitigalOnBoardingServices/rest/v1/users/QTAzN9Yht3IL-Q714vX0tJyMgQ/idchecks/</url>

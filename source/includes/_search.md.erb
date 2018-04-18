@@ -1,10 +1,9 @@
-
 ## Search
 
 You can search for a specific resource or resources within a resource collection by using certain query parameters to specify search criteria. Searching is case insensitive and supports an asterisk (*) as a wildcard. Searches are treated as exact (case insensitive) matches if the wildcard is not used. The searchable query parameter(s) are documented on a per operation basis.
 
 Some searches can also be filtered by status using the optional status query parameter. By default resources with any status are returned. If this parameter is included though, then the resources returned can be limited to a particular status such as ACTIVE or ARCHIVED (see individual operations for allowable values).
 
-**Example Request:** Searching for ID Checks with a <code>referenceId</code> beginning with �Thales� and a <code>status</code> of ACTIVE:
+**Example Request:** Searching for ID Checks with a <code>referenceId</code> beginning with ‘Thales’ and a <code>status</code> of ACTIVE:
 
-<url><code>GET</code> https://tenant.domain.com/DigitalOnBoardingServices/rest/v1/idchecks/?referenceId=Thales&status=ACTIVE</url>
+<url><code>GET</code> https://emea.identityx-cloud.com/mytenant/DigitalOnBoardingServices/rest/v1/idchecks/?referenceId=Thales&status=ACTIVE</url>
